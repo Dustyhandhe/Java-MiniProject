@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.TransactionRecordMapper">
+    <resultMap id="BaseResultMap" type="com.entity.TransactionRecord">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="Cardno" property="cardno" jdbcType="VARCHAR"/>
+        <result column="Transaction_date" property="transactionDate" jdbcType="DATE"/>
+        <result column="expense" property="expense" jdbcType="DOUBLE"/>
+        <result column="income" property="income" jdbcType="DOUBLE"/>
+        <result column="Account_balance" property="accountBalance" jdbcType="DOUBLE"/>
+        <result column="Transaction_type" property="transactionType" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, Cardno, Transaction_date, expense, income, Account_balance, Transaction_type, 
+    remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from transaction_record
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from transaction_record
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.entity.TransactionRecord">
+    insert into transaction_record (Id, Cardno, Transaction_date, 
+      expense, income, Account_balance, 
+      Transaction_type, remark)
+    values (#{id,jdbcType=INTEGER}, #{cardno,jdbcType=VARCHAR}, #{transactionDate,jdbcType=DATE}, 
+      #{expense,jdbcType=DOUBLE}, #{income,jdbcType=DOUBLE}, #{accountBalance,jdbcType=DOUBLE}, 
+      #{transactionType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.entity.TransactionRecord">
+        insert into transaction_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="cardno != null">
+                Cardno,
+            </if>
+            <if test="transactionDate != null">
+                Transaction_date,
+            </if>
+            <if test="expense != null">
+                expense,
+            </if>
+            <if test="income != null">
+                income,
+            </if>
+            <if test="accountBalance != null">
+                Account_balance,
+            </if>
+            <if test="transactionType != null">
+                Transaction_type,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="cardno != null">
+                #{cardno,jdbcType=VARCHAR},
+            </if>
+            <if test="transactionDate != null">
+                #{transactionDate,jdbcType=DATE},
+            </if>
+            <if test="expense != null">
+                #{expense,jdbcType=DOUBLE},
+            </if>
+            <if test="income != null">
+                #{income,jdbcType=DOUBLE},
+            </if>
+            <if test="accountBalance != null">
+                #{accountBalance,jdbcType=DOUBLE},
+            </if>
+            <if test="transactionType != null">
+                #{transactionType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.entity.TransactionRecord">
+        update transaction_record
+        <set>
+            <if test="cardno != null">
+                Cardno = #{cardno,jdbcType=VARCHAR},
+            </if>
+            <if test="transactionDate != null">
+                Transaction_date = #{transactionDate,jdbcType=DATE},
+            </if>
+            <if test="expense != null">
+                expense = #{expense,jdbcType=DOUBLE},
+            </if>
+            <if test="income != null">
+                income = #{income,jdbcType=DOUBLE},
+            </if>
+            <if test="accountBalance != null">
+                Account_balance = #{accountBalance,jdbcType=DOUBLE},
+            </if>
+            <if test="transactionType != null">
+                Transaction_type = #{transactionType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.entity.TransactionRecord">
+    update transaction_record
+    set Cardno = #{cardno,jdbcType=VARCHAR},
+      Transaction_date = #{transactionDate,jdbcType=DATE},
+      expense = #{expense,jdbcType=DOUBLE},
+      income = #{income,jdbcType=DOUBLE},
+      Account_balance = #{accountBalance,jdbcType=DOUBLE},
+      Transaction_type = #{transactionType,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="findByPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from transaction_record
+        <where>
+            <if test="startDate!=null and endDate!=null">
+                and transaction_date between #{startDate} and #{endDate}
+            </if>
+            and cardno=#{cardno}
+        </where>
+        limit #{offset},#{pageSize}
+    </select>
+    <select id="findTotalCount" resultType="long">
+        select count(*) from transaction_record
+        <where>
+            <if test="startDate!=null and endDate!=null">
+                and transaction_date between #{startDate} and #{endDate}
+            </if>
+            and cardno=#{cardno}
+        </where>
+    </select>
+</mapper>
